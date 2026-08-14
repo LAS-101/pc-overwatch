@@ -1,0 +1,20 @@
+#!/bin/bash
+
+THRESHOLD=89
+
+# 1. Get the current temperature as a pure integer (e.g., 52)
+TEMP=0
+for zone in /sys/class/thermal/thermal_zone*; do
+    if [ "$(cat "$zone/type" 2>/dev/null)" = "x86_pkg_temp" ]; then
+        TEMP=$(( $(cat "$zone/temp") / 1000 ))
+        break
+    fi
+done
+
+echo "$(date '+%H:%M:%S') Current CPU temp: ${TEMP}°C"
+
+# 2. If it exceeds the threshold, trigger the Telegram alert
+if [ "$TEMP" -gt "$THRESHOLD" ]; then
+    /home/elyes/projects/cpu-temperature/.venv/bin/python3 \
+        /home/elyes/projects/cpu-temperature/telegram_msg.py "$TEMP"
+fi

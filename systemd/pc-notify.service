@@ -1,0 +1,15 @@
+[Unit]
+Description=PC Boot/Shutdown Telegram Notification
+After=network-online.target
+Wants=network-online.target
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/elyes/projects/pc-overwatch
+ExecStart=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/pc_notify.py boot
+ExecStop=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/pc_notify.py shutdown
+
+[Install]
+WantedBy=default.target

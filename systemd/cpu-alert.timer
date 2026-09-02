@@ -1,0 +1,11 @@
+[Unit]
+Description=Run CPU Temperature Check every 5 seconds
+
+[Timer]
+OnBootSec=10s
+OnUnitActiveSec=5s
+AccuracySec=1s
+Unit=cpu-alert.service
+
+[Install]
+WantedBy=timers.target

@@ -1,15 +1,9 @@
 #!/bin/bash
 
-THRESHOLD=89
+THRESHOLD=95
 
-# 1. Get the current temperature as a pure integer (e.g., 52)
-TEMP=0
-for zone in /sys/class/thermal/thermal_zone*; do
-    if [ "$(cat "$zone/type" 2>/dev/null)" = "x86_pkg_temp" ]; then
-        TEMP=$(( $(cat "$zone/temp") / 1000 ))
-        break
-    fi
-done
+# 1. Get the current temperature via the shared reader
+TEMP=$(/home/elyes/projects/cpu-temperature/read_temp)
 
 echo "$(date '+%H:%M:%S') Current CPU temp: ${TEMP}°C"
 

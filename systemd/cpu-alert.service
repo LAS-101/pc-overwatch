@@ -1,0 +1,9 @@
+[Unit]
+Description=CPU Temperature Check (single run)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/elyes/projects/pc-overwatch
+ExecStart=/home/elyes/projects/pc-overwatch/scripts/cpu

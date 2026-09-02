@@ -1,0 +1,8 @@
+#!/bin/bash
+for zone in /sys/class/thermal/thermal_zone*; do
+    if [ "$(cat "$zone/type" 2>/dev/null)" = "x86_pkg_temp" ]; then
+        echo $(( $(cat "$zone/temp") / 1000 ))
+        exit 0
+    fi
+done
+echo -1

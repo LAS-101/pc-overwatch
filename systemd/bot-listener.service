@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram Bot Listener (responds to /status)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/elyes/projects/pc-overwatch
+ExecStart=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/bot_listener.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

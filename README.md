@@ -4,6 +4,26 @@ A lightweight monitoring pipeline that checks CPU temperature on a schedule and 
 
 ---
 
+## Project structure
+
+```
+cpu-temperature/
+├── cpu                     # main bash script (temp check + threshold logic)
+├── telegram_msg.py         # sends the Telegram alert
+├── config.py               # token_key + chat_id
+├── requirements.txt
+├── README.md
+├── .env
+├── .gitignore
+└── systemd/
+    ├── cpu-alert.service
+    └── cpu-alert.timer
+```
+
+The `systemd/` folder holds the two unit files as **templates** — they need to be copied into `~/.config/systemd/user/` to actually be picked up by systemd (see Setup below).
+
+---
+
 ## How it works
 
 ```
@@ -37,8 +57,8 @@ Each check is a **fresh, isolated run** — there's no long-running loop process
 | `cpu` | Bash script — reads current CPU temp, compares against threshold, calls the Python alert script if exceeded |
 | `telegram_msg.py` | Python script — sends a Telegram message via the Bot API; takes the temperature as a CLI argument |
 | `config.py` | Stores `token_key` (bot token) and `chat_id` (your Telegram chat ID) |
-| `~/.config/systemd/user/cpu-alert.service` | Defines *what* to run — a single execution of the `cpu` script |
-| `~/.config/systemd/user/cpu-alert.timer` | Defines *when* to run it — every 5 seconds |
+| `systemd/cpu-alert.service` | Defines *what* to run — a single execution of the `cpu` script |
+| `systemd/cpu-alert.timer` | Defines *when* to run it — every 5 seconds |
 
 ---
 
@@ -69,18 +89,26 @@ Each check is a **fresh, isolated run** — there's no long-running loop process
 
 ---
 
-## Setup summary
+## Setup
 
 ```bash
+# 1. Make the script executable
 chmod +x ~/projects/cpu-temperature/cpu
 
-# Enable and start the timer (not the service directly)
+# 2. Copy the unit files into systemd's user directory
+mkdir -p ~/.config/systemd/user
+cp ~/projects/cpu-temperature/systemd/cpu-alert.service ~/.config/systemd/user/
+cp ~/projects/cpu-temperature/systemd/cpu-alert.timer ~/.config/systemd/user/
+
+# 3. Reload systemd and enable the timer (not the service directly)
 systemctl --user daemon-reload
 systemctl --user enable --now cpu-alert.timer
 
-# Let it run even before login (e.g. right after boot)
+# 4. Let it run even before login (e.g. right after boot)
 sudo loginctl enable-linger elyes
 ```
+
+> **Note:** `cpu-alert.service` references an absolute path (`WorkingDirectory` / `ExecStart`) pointing at the project directory and venv. If you clone this repo somewhere other than `~/projects/cpu-temperature`, update those paths in `systemd/cpu-alert.service` before copying it over.
 
 ---
 
@@ -110,6 +138,12 @@ systemctl --user disable --now cpu-alert.timer # fully disable + stop
 ```bash
 systemctl --user daemon-reload                # only needed if .service/.timer files changed
 systemctl --user restart cpu-alert.timer      # not usually needed — oneshot services just re-run on schedule
+```
+
+**Resource usage** (each run is a short-lived oneshot process — negligible footprint, typically a few MB of memory and well under 50ms of CPU time)
+```bash
+systemctl --user status cpu-alert.service     # shows Memory/CPU of the last run (with accounting enabled)
+/usr/bin/time -v ~/projects/cpu-temperature/cpu  # detailed manual measurement of a single run
 ```
 
 ---

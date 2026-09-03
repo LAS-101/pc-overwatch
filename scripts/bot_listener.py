@@ -2,11 +2,11 @@ import logging
 import subprocess
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from config import token_key, chat_id
-
+from config import token_key, chat_id , project_path
+import os
 logging.basicConfig(level=logging.INFO)
 
-READ_TEMP_SCRIPT = "/home/elyes/projects/pc-overwatch/scripts/read_temp"
+READ_TEMP_SCRIPT = os.path.join(project_path, "scripts", "read_temp")
 
 def read_cpu_temp() -> int:
     try:

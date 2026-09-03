@@ -1,6 +1,5 @@
 import asyncio
 import sys
-import socket
 from telegram import Bot
 from config import token_key, chat_id,PC_NAME
 

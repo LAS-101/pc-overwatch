@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/elyes/projects/pc-overwatch
-ExecStart=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/bot_listener.py
+WorkingDirectory=%h/projects/pc-overwatch
+ExecStart=%h/projects/pc-overwatch/.venv/bin/python3 %h/projects/pc-overwatch/scripts/bot_listener.py
 Restart=always
 RestartSec=10
 

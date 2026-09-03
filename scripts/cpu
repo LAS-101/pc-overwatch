@@ -1,14 +1,20 @@
 #!/bin/bash
 
+# Load environment variables (project_path, etc.) from .env
+# Resolve .env relative to this script's own location, so it works
+# regardless of where the project is cloned.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$SCRIPT_DIR/.env"
+
 THRESHOLD=95
 
 # 1. Get the current temperature via the shared reader
-TEMP=$(/home/elyes/projects/pc-overwatch/scripts/read_temp)
+TEMP=$("${project_path}scripts/read_temp")
 
 echo "$(date '+%H:%M:%S') Current CPU temp: ${TEMP}°C"
 
 # 2. If it exceeds the threshold, trigger the Telegram alert
 if [ "$TEMP" -gt "$THRESHOLD" ]; then
-    /home/elyes/projects/pc-overwatch/.venv/bin/python3 \
-        /home/elyes/projects/pc-overwatch/scripts/send_alert.py "$TEMP"
+    "${project_path}.venv/bin/python3" \
+        "${project_path}scripts/send_alert.py" "$TEMP"
 fi

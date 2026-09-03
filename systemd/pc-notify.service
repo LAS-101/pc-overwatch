@@ -7,10 +7,10 @@ Before=shutdown.target reboot.target halt.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/elyes/projects/pc-overwatch
+WorkingDirectory=%h/projects/pc-overwatch
 ExecStartPre=/bin/sleep 10
-ExecStart=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/pc_notify.py boot
-ExecStop=/home/elyes/projects/pc-overwatch/.venv/bin/python3 /home/elyes/projects/pc-overwatch/scripts/pc_notify.py shutdown
+ExecStart=%h/projects/pc-overwatch/.venv/bin/python3 %h/projects/pc-overwatch/scripts/pc_notify.py boot
+ExecStop=%h/projects/pc-overwatch/.venv/bin/python3 %h/projects/pc-overwatch/scripts/pc_notify.py shutdown
 Restart=on-failure
 RestartSec=5
 StartLimitIntervalSec=60

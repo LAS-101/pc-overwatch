@@ -6,7 +6,7 @@ from config import token_key, chat_id
 
 logging.basicConfig(level=logging.INFO)
 
-READ_TEMP_SCRIPT = "/home/elyes/projects/cpu-temperature/read_temp"
+READ_TEMP_SCRIPT = "/home/elyes/projects/pc-overwatch/scripts/read_temp"
 
 def read_cpu_temp() -> int:
     try:

@@ -3,12 +3,12 @@
 THRESHOLD=95
 
 # 1. Get the current temperature via the shared reader
-TEMP=$(/home/elyes/projects/cpu-temperature/read_temp)
+TEMP=$(/home/elyes/projects/pc-overwatch/scripts/read_temp)
 
 echo "$(date '+%H:%M:%S') Current CPU temp: ${TEMP}°C"
 
 # 2. If it exceeds the threshold, trigger the Telegram alert
 if [ "$TEMP" -gt "$THRESHOLD" ]; then
-    /home/elyes/projects/cpu-temperature/.venv/bin/python3 \
-        /home/elyes/projects/cpu-temperature/telegram_msg.py "$TEMP"
+    /home/elyes/projects/pc-overwatch/.venv/bin/python3 \
+        /home/elyes/projects/pc-overwatch/scripts/send_alert.py "$TEMP"
 fi
